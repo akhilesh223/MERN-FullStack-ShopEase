@@ -68,41 +68,58 @@ const ProductDetail = () => {
     navigate('/cart');
   };
 
-  if (loading) return <div className="container" style={{ padding: '5rem 0', textAlign: 'center' }}><h2>Loading Product Details...</h2></div>;
-  if (!product) return <div className="container" style={{ padding: '5rem 0', textAlign: 'center' }}><h2>Product Not Found!</h2></div>;
+  if (loading) return <div className="container mx-auto px-4 py-20 text-center"><h2 className="text-2xl font-bold">Loading Product Details...</h2></div>;
+  if (!product) return <div className="container mx-auto px-4 py-20 text-center"><h2 className="text-2xl font-bold text-red-500">Product Not Found!</h2></div>;
 
   return (
-    <div className="container" style={{ padding: '2rem 0' }}>
-      <Link to="/" style={styles.backBtn}>&larr; Back to Catalog</Link>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <Link to="/" className="inline-block mb-8 text-slate-400 font-bold hover:text-blue-500 transition-colors">
+        &larr; Back to Catalog
+      </Link>
 
-      <div style={styles.grid}>
-        <div style={styles.imageCol}>
-          <img src={product.image} alt={product.name} style={styles.image} className="glass" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        {/* Image Column */}
+        <div className="w-full lg:col-span-1">
+          <img 
+            src={product.image} 
+            alt={product.name} 
+            className="w-full rounded-xl object-cover glass shadow-lg" 
+          />
         </div>
 
-        <div style={styles.infoCol}>
-          <p style={styles.brand}>{product.brand}</p>
-          <h1 style={styles.title}>{product.name}</h1>
-          <div style={styles.rating}>⭐ {product.rating} ({product.numReviews} Reviews)</div>
-          <p style={styles.price}>${product.price}</p>
-          <p style={styles.description}>{product.description}</p>
+        {/* Info Column */}
+        <div className="flex flex-col lg:col-span-1">
+          <p className="text-blue-500 font-bold tracking-widest uppercase mb-2">{product.brand}</p>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold my-2 leading-tight text-white">{product.name}</h1>
+          <div className="text-yellow-400 mb-4 text-lg">
+            ⭐ {product.rating} <span className="text-slate-400 text-base">({product.numReviews} Reviews)</span>
+          </div>
+          <p className="text-3xl font-extrabold mb-6 text-white">${product.price}</p>
+          <p className="text-slate-400 text-lg leading-relaxed">{product.description}</p>
         </div>
 
-        <div style={styles.actionCol}>
-          <div className="glass" style={styles.actionCard}>
-            <div style={styles.actionRow}>
-              <span>Price:</span>
-              <strong>${product.price}</strong>
+        {/* Action Column */}
+        <div className="lg:col-span-1">
+          <div className="glass p-6 rounded-xl shadow-xl border border-white/10">
+            <div className="flex justify-between pb-4 mb-4 border-b border-white/10">
+              <span className="text-slate-300">Price:</span>
+              <strong className="text-white text-lg">${product.price}</strong>
             </div>
-            <div style={styles.actionRow}>
-              <span>Status:</span>
-              <strong>{product.countInStock > 0 ? 'In Stock' : 'Out of Stock'}</strong>
+            <div className="flex justify-between pb-4 mb-4 border-b border-white/10">
+              <span className="text-slate-300">Status:</span>
+              <strong className={product.countInStock > 0 ? 'text-green-400' : 'text-red-400'}>
+                {product.countInStock > 0 ? 'In Stock' : 'Out of Stock'}
+              </strong>
             </div>
 
             {product.countInStock > 0 && (
-              <div style={styles.actionRow}>
-                <span>Qty:</span>
-                <select value={qty} onChange={(e) => setQty(Number(e.target.value))} style={styles.select}>
+              <div className="flex justify-between items-center pb-4 mb-4 border-b border-white/10">
+                <span className="text-slate-300">Qty:</span>
+                <select 
+                  value={qty} 
+                  onChange={(e) => setQty(Number(e.target.value))} 
+                  className="px-3 py-1.5 rounded-lg bg-slate-800 text-white border border-slate-600 focus:outline-none focus:border-blue-500"
+                >
                   {[...Array(product.countInStock).keys()].map((x) => (
                     <option key={x + 1} value={x + 1}>{x + 1}</option>
                   ))}
@@ -111,7 +128,11 @@ const ProductDetail = () => {
             )}
 
             <button
-              style={{ ...styles.addBtn, opacity: product.countInStock === 0 ? 0.5 : 1 }}
+              className={`w-full py-3 mt-4 text-lg font-bold rounded-lg transition-all ${
+                product.countInStock === 0 
+                  ? 'bg-blue-500/50 cursor-not-allowed text-white/70' 
+                  : 'bg-blue-500 hover:bg-blue-600 hover:shadow-lg text-white hover:-translate-y-0.5'
+              }`}
               disabled={product.countInStock === 0}
               onClick={addToCartHandler}
             >
@@ -123,97 +144,5 @@ const ProductDetail = () => {
     </div>
   );
 };
-
-const styles = {
-  backBtn: {
-    display: 'inline-block',
-    marginBottom: '2rem',
-    color: 'var(--text-secondary)',
-    fontWeight: 'bold',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    gap: '3rem',
-  },
-  '@media (min-width: 768px)': {
-    grid: {
-      gridTemplateColumns: '1fr 1fr 300px',
-    }
-  },
-  imageCol: {
-    width: '100%',
-  },
-  image: {
-    width: '100%',
-    borderRadius: '12px',
-    objectFit: 'cover',
-  },
-  infoCol: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  brand: {
-    color: 'var(--accent-color)',
-    fontWeight: 'bold',
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-  },
-  title: {
-    fontSize: '2.5rem',
-    margin: '0.5rem 0',
-    lineHeight: '1.2',
-  },
-  rating: {
-    color: '#fbbf24',
-    marginBottom: '1rem',
-    fontSize: '1.1rem',
-  },
-  price: {
-    fontSize: '2rem',
-    fontWeight: '800',
-    marginBottom: '1.5rem',
-  },
-  description: {
-    color: 'var(--text-secondary)',
-    fontSize: '1.1rem',
-    lineHeight: '1.8',
-  },
-  actionCard: {
-    padding: '1.5rem',
-    borderRadius: '12px',
-  },
-  actionRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingBottom: '1rem',
-    marginBottom: '1rem',
-    borderBottom: '1px solid rgba(255,255,255,0.1)',
-  },
-  select: {
-    padding: '0.3rem 0.8rem',
-    borderRadius: '6px',
-    backgroundColor: 'var(--bg-primary)',
-    color: 'white',
-    border: '1px solid var(--border-color)',
-  },
-  addBtn: {
-    width: '100%',
-    padding: '1rem',
-    fontSize: '1.1rem',
-    borderRadius: '8px',
-    marginTop: '1rem',
-  }
-};
-
-const responsiveStyle = document.createElement('style');
-responsiveStyle.innerHTML = `
-  @media (min-width: 992px) {
-    .container > div:nth-child(2) {
-      grid-template-columns: 2fr 2fr 1fr !important;
-    }
-  }
-`;
-document.head.appendChild(responsiveStyle);
 
 export default ProductDetail;

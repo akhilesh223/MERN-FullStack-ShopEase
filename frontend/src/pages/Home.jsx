@@ -33,23 +33,31 @@ const Home = () => {
   ];
 
   return (
-    <div className="container">
-      <div style={styles.hero}>
-        <h1 style={styles.title}>Welcome to <span style={{ color: 'var(--accent-color)' }}>ShopEase</span></h1>
-        <p style={styles.subtitle}>Discover premium products curated just for you.</p>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-16 md:py-24 text-center mb-8">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 tracking-tight">
+          Welcome to <span className="text-blue-500">ShopEase</span>
+        </h1>
+        <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+          Discover premium products curated just for you.
+        </p>
       </div>
 
-      <h2 style={styles.sectionTitle}>Latest Arrivals</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-8 border-b-2 border-slate-700 pb-2">
+        Latest Arrivals
+      </h2>
 
       {loading ? (
-        <div style={styles.loaderContainer}>
-          <div className="loader" style={styles.loader}></div>
-          <p>Loading catalog...</p>
+        <div className="flex flex-col items-center justify-center h-[30vh]">
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-white/10 border-t-blue-500 mb-4"></div>
+          <p className="text-slate-400">Loading catalog...</p>
         </div>
       ) : error ? (
-        <div style={styles.error}>{error}</div>
+        <div className="p-4 bg-red-500/10 border-l-4 border-red-500 text-red-300 rounded">
+          {error}
+        </div>
       ) : (
-        <div style={styles.grid}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 pb-16">
           {displayProducts.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
@@ -58,66 +66,5 @@ const Home = () => {
     </div>
   );
 };
-
-const styles = {
-  hero: {
-    padding: '4rem 0',
-    textAlign: 'center',
-    marginBottom: '2rem',
-  },
-  title: {
-    fontSize: '3.5rem',
-    fontWeight: '800',
-    marginBottom: '1rem',
-    letterSpacing: '-1px',
-  },
-  subtitle: {
-    fontSize: '1.2rem',
-    color: 'var(--text-secondary)',
-    maxWidth: '600px',
-    margin: '0 auto',
-  },
-  sectionTitle: {
-    fontSize: '2rem',
-    marginBottom: '2rem',
-    borderBottom: '2px solid var(--border-color)',
-    paddingBottom: '0.5rem',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-    gap: '2rem',
-    paddingBottom: '4rem',
-  },
-  loaderContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '30vh',
-  },
-  loader: {
-    border: '4px solid rgba(255, 255, 255, 0.1)',
-    borderTop: '4px solid var(--accent-color)',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    animation: 'spin 1s linear infinite',
-    marginBottom: '1rem',
-  },
-  error: {
-    padding: '1rem',
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    borderLeft: '4px solid #ef4444',
-    color: '#fca5a5',
-  }
-};
-
-// Add keyframes for loader
-const keyframesStyle = document.createElement('style');
-keyframesStyle.innerHTML = `
-  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-`;
-document.head.appendChild(keyframesStyle);
 
 export default Home;

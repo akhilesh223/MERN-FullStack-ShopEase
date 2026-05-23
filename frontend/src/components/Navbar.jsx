@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/slices/authSlice';
+import { FaMapMarkerAlt, FaSearch, FaShoppingCart, FaBars } from 'react-icons/fa';
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const cart = useSelector(state => state.cart);
-  const { cartItems } = cart;
+  const { cartItems } = cart || { cartItems: [] };
 
   const userLogin = useSelector(state => state.auth);
-  const { userInfo } = userLogin;
+  const { userInfo } = userLogin || {};
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -21,293 +23,138 @@ const Navbar = () => {
   const cartCount = cartItems.reduce((acc, item) => acc + item.qty, 0);
 
   return (
-    <nav style={styles.nav}>
-      <div style={styles.topContainer}>
-        {/* Logo Section */}
-        <Link to="/" style={styles.logoBlock}>
-          <span style={styles.logoText}>ShopEase</span>
-          <span style={styles.domain}>.com</span>
-        </Link>
+    <nav className="bg-[#131921] text-white flex flex-col font-sans">
+      {/* Main Top Container */}
+      <div className="flex flex-wrap md:flex-nowrap items-center justify-between p-2 md:p-3 gap-2 md:gap-4">
+        
+        {/* Left Section: Logo & Delivery (Mobile & Desktop) */}
+        <div className="flex items-center gap-2 flex-grow md:flex-grow-0 justify-between md:justify-start">
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden text-white p-2 focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <FaBars className="text-xl" />
+          </button>
 
-        {/* Deliver To Section (Amazon Style) */}
-        <div style={styles.deliverBlock}>
-          <div style={styles.deliverIcon}>📍</div>
-          <div style={styles.deliverText}>
-            <span style={styles.deliverLabel}>Deliver to</span>
-            <span style={styles.deliverLocation}>Select your address</span>
+          {/* Logo Section */}
+          <Link to="/" className="flex items-baseline text-white hover:border-white border border-transparent p-1 md:p-2 rounded-sm">
+            <span className="text-xl md:text-2xl font-bold tracking-tight">ShopEase</span>
+            <span className="text-xs md:text-sm mt-1">.com</span>
+          </Link>
+
+          {/* Cart (Mobile Only - positioned right) */}
+          <Link to="/cart" className="md:hidden flex items-end text-white hover:border-white border border-transparent p-1 rounded-sm relative">
+            <div className="relative flex items-center">
+              <FaShoppingCart className="text-2xl" />
+              <span className="absolute -top-2 left-3 bg-[#f08804] text-[#131921] font-bold text-xs px-1.5 py-0.5 rounded-full">
+                {cartCount}
+              </span>
+            </div>
+          </Link>
+        </div>
+
+        {/* Deliver To Section (Hidden on small mobile, visible on sm+) */}
+        <div className="hidden sm:flex items-center p-1 md:p-2 border border-transparent hover:border-white rounded-sm cursor-pointer">
+          <FaMapMarkerAlt className="text-lg mr-1 text-gray-300" />
+          <div className="flex flex-col">
+            <span className="text-[10px] md:text-xs text-gray-300 leading-tight">Deliver to</span>
+            <span className="text-sm font-bold leading-tight whitespace-nowrap">Select your address</span>
           </div>
         </div>
 
-        {/* Search Bar Section */}
-        <div style={styles.searchBlock}>
-          <select style={styles.searchSelect}>
+        {/* Search Bar Section (Full width on mobile, inline on md+) */}
+        <div className="flex flex-1 w-full md:w-auto h-10 rounded overflow-hidden order-last md:order-none mt-2 md:mt-0">
+          <select className="hidden sm:block bg-gray-100 border-r border-gray-300 px-2 text-gray-800 outline-none cursor-pointer text-sm">
             <option>All</option>
             <option>Electronics</option>
             <option>Mobiles</option>
             <option>Computers</option>
             <option>Home & Kitchen</option>
             <option>Fashion</option>
-            <option>Books</option>
-            <option>Toys & Games</option>
-
           </select>
           <input
             type="text"
             placeholder="Search ShopEase"
-            style={styles.searchInput}
+            className="flex-1 border-none px-3 text-sm md:text-base outline-none text-gray-900"
           />
-          <button style={styles.searchBtn}>🔍</button>
+          <button className="bg-[#febd69] hover:bg-[#f3a847] border-none w-10 md:w-12 cursor-pointer text-gray-800 flex items-center justify-center text-lg transition-colors">
+            <FaSearch />
+          </button>
         </div>
 
-        {/* Right Side Links */}
-        <div style={styles.rightLinks}>
-
+        {/* Right Side Links (Hidden on mobile, visible on md+) */}
+        <div className="hidden md:flex items-center gap-2 whitespace-nowrap">
           {/* Account & Lists */}
           {userInfo ? (
-            <div style={styles.navItem} className="nav-hover">
-              <span style={styles.navItemLabel}>Hello, {userInfo.name}</span>
-              <span style={styles.navItemValue}>
+            <div className="flex flex-col text-white hover:border-white border border-transparent p-2 rounded-sm cursor-pointer group relative">
+              <span className="text-xs leading-tight">Hello, {userInfo.name}</span>
+              <span className="text-sm font-bold leading-tight flex items-center gap-1">
                 Account & Lists
-                <button onClick={logoutHandler} style={styles.logoutBtn}>Sign Out</button>
               </span>
+              {/* Dropdown for Sign out */}
+              <div className="absolute top-full right-0 mt-1 bg-white text-black p-2 rounded shadow-lg hidden group-hover:block z-50">
+                <button onClick={logoutHandler} className="text-sm hover:underline text-blue-600 bg-transparent p-0">Sign Out</button>
+              </div>
             </div>
           ) : (
-            <Link to="/login" style={styles.navItem} className="nav-hover">
-              <span style={styles.navItemLabel}>Hello, sign in</span>
-              <span style={styles.navItemValue}>Account & Lists</span>
+            <Link to="/login" className="flex flex-col text-white hover:border-white border border-transparent p-2 rounded-sm cursor-pointer">
+              <span className="text-xs leading-tight">Hello, sign in</span>
+              <span className="text-sm font-bold leading-tight">Account & Lists</span>
             </Link>
           )}
 
           {/* Returns & Orders */}
-          <div style={styles.navItem} className="nav-hover">
-            <span style={styles.navItemLabel}>Returns</span>
-            <span style={styles.navItemValue}>& Orders</span>
+          <div className="flex flex-col text-white hover:border-white border border-transparent p-2 rounded-sm cursor-pointer">
+            <span className="text-xs leading-tight">Returns</span>
+            <span className="text-sm font-bold leading-tight">& Orders</span>
           </div>
 
-          {/* Cart */}
-          <Link to="/cart" style={styles.cartBlock} className="nav-hover">
-            <div style={styles.cartIconWrapper}>
-              <span style={styles.cartIcon}>🛒</span>
-              <span style={styles.cartBadge}>{cartCount}</span>
+          {/* Cart (Desktop) */}
+          <Link to="/cart" className="flex items-end text-white hover:border-white border border-transparent p-2 rounded-sm">
+            <div className="relative flex items-center">
+              <FaShoppingCart className="text-3xl" />
+              <span className="absolute -top-1 left-3 bg-[#f08804] text-[#131921] font-bold text-sm px-1.5 rounded-full">
+                {cartCount}
+              </span>
             </div>
-            <span style={styles.cartText}>Cart</span>
+            <span className="text-sm font-bold mb-1 ml-1">Cart</span>
           </Link>
         </div>
       </div>
 
+      {/* Mobile Menu Expansion (Visible only when menuOpen is true on mobile) */}
+      {menuOpen && (
+        <div className="md:hidden flex flex-col bg-[#232f3e] p-3 gap-3 text-sm">
+          {userInfo ? (
+             <div className="flex justify-between items-center border-b border-gray-600 pb-2">
+               <span>Hello, {userInfo.name}</span>
+               <button onClick={logoutHandler} className="text-[#febd69] font-bold bg-transparent p-0">Sign Out</button>
+             </div>
+          ) : (
+            <Link to="/login" className="border-b border-gray-600 pb-2 font-bold">Sign In</Link>
+          )}
+          <Link to="/orders" className="py-1">Returns & Orders</Link>
+        </div>
+      )}
+
       {/* Bottom Nav Bar */}
-      <div style={styles.bottomContainer}>
-        <div style={styles.menuIcon}>☰ All</div>
-        <div style={styles.bottomLinks}>
-          <span style={styles.bottomLink}>Today's Deals</span>
-          <Link to="/category/electronics" style={{ ...styles.bottomLink, color: 'white', textDecoration: 'none' }}>Electronic Items</Link>
-          <Link to="/category/mobiles" style={{ ...styles.bottomLink, color: 'white', textDecoration: 'none' }}>Mobiles</Link>
-          <Link to="/category/computers" style={{ ...styles.bottomLink, color: 'white', textDecoration: 'none' }}>Computers</Link>
-          <Link to="/category/home-kitchen" style={{ ...styles.bottomLink, color: 'white', textDecoration: 'none' }}>Home & Kitchen</Link>
-          <Link to="/category/fashion" style={{ ...styles.bottomLink, color: 'white', textDecoration: 'none' }}>Fashion</Link>
-          <Link to="/category/books" style={{ ...styles.bottomLink, color: 'white', textDecoration: 'none' }}>Books</Link>
-          <Link to="/category/toys" style={{ ...styles.bottomLink, color: 'white', textDecoration: 'none' }}>Toys & Games</Link>
+      <div className="bg-[#232f3e] flex items-center p-1 md:p-2 gap-2 md:gap-4 overflow-x-auto whitespace-nowrap scrollbar-hide text-sm">
+        <div className="font-bold cursor-pointer hover:border-white border border-transparent p-1 md:p-2 flex items-center gap-1">
+          <FaBars /> All
+        </div>
+        <div className="flex gap-2 md:gap-4 items-center">
+          <span className="cursor-pointer hover:border-white border border-transparent p-1 md:p-2">Today's Deals</span>
+          <Link to="/category/electronics" className="text-white hover:border-white border border-transparent p-1 md:p-2">Electronic Items</Link>
+          <Link to="/category/mobiles" className="text-white hover:border-white border border-transparent p-1 md:p-2">Mobiles</Link>
+          <Link to="/category/computers" className="text-white hover:border-white border border-transparent p-1 md:p-2">Computers</Link>
+          <Link to="/category/home-kitchen" className="text-white hover:border-white border border-transparent p-1 md:p-2">Home & Kitchen</Link>
+          <Link to="/category/fashion" className="text-white hover:border-white border border-transparent p-1 md:p-2">Fashion</Link>
+          <Link to="/category/books" className="text-white hover:border-white border border-transparent p-1 md:p-2">Books</Link>
         </div>
       </div>
     </nav>
   );
 };
-
-const styles = {
-  nav: {
-    backgroundColor: '#131921',
-    color: 'white',
-    display: 'flex',
-    flexDirection: 'column',
-    fontFamily: 'Arial, sans-serif',
-  },
-  topContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.5rem 1rem',
-    gap: '1rem',
-  },
-  logoBlock: {
-    display: 'flex',
-    alignItems: 'baseline',
-    color: 'white',
-    textDecoration: 'none',
-    padding: '0.5rem',
-    borderRadius: '2px',
-    border: '1px solid transparent',
-  },
-  logoText: {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    letterSpacing: '-1px',
-  },
-  domain: {
-    fontSize: '0.9rem',
-    marginTop: '0.5rem',
-  },
-  deliverBlock: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.5rem',
-    border: '1px solid transparent',
-    borderRadius: '2px',
-    cursor: 'pointer',
-  },
-  deliverIcon: {
-    fontSize: '1.2rem',
-    marginRight: '0.3rem',
-  },
-  deliverText: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  deliverLabel: {
-    fontSize: '0.75rem',
-    color: '#cccccc',
-    lineHeight: '1',
-  },
-  deliverLocation: {
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    lineHeight: '1',
-  },
-  searchBlock: {
-    display: 'flex',
-    flex: 1,
-    height: '40px',
-    borderRadius: '4px',
-    overflow: 'hidden',
-  },
-  searchSelect: {
-    backgroundColor: '#f3f3f3',
-    border: 'none',
-    borderRight: '1px solid #ccc',
-    padding: '0 0.5rem',
-    color: '#333',
-    outline: 'none',
-    cursor: 'pointer',
-  },
-  searchInput: {
-    flex: 1,
-    border: 'none',
-    padding: '0 1rem',
-    fontSize: '1rem',
-    outline: 'none',
-  },
-  searchBtn: {
-    backgroundColor: '#febd69',
-    border: 'none',
-    width: '45px',
-    cursor: 'pointer',
-    color: '#333',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '1.2rem',
-  },
-  rightLinks: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-  },
-  navItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    color: 'white',
-    textDecoration: 'none',
-    padding: '0.5rem',
-    border: '1px solid transparent',
-    borderRadius: '2px',
-    cursor: 'pointer',
-  },
-  navItemLabel: {
-    fontSize: '0.75rem',
-    lineHeight: '1',
-  },
-  navItemValue: {
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    lineHeight: '1',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-  },
-  logoutBtn: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    color: '#febd69',
-    cursor: 'pointer',
-    fontSize: '0.8rem',
-    fontWeight: 'bold',
-    textDecoration: 'underline',
-  },
-  cartBlock: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    color: 'white',
-    textDecoration: 'none',
-    padding: '0.5rem',
-    border: '1px solid transparent',
-    borderRadius: '2px',
-  },
-  cartIconWrapper: {
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  cartIcon: {
-    fontSize: '2rem',
-    lineHeight: '1',
-  },
-  cartBadge: {
-    position: 'absolute',
-    top: '-5px',
-    left: '15px',
-    backgroundColor: '#f08804',
-    color: '#131921',
-    fontWeight: 'bold',
-    fontSize: '0.9rem',
-    padding: '0 0.4rem',
-    borderRadius: '50%',
-  },
-  cartText: {
-    fontSize: '0.9rem',
-    fontWeight: 'bold',
-    marginBottom: '0.2rem',
-  },
-  bottomContainer: {
-    backgroundColor: '#232f3e',
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0.3rem 1rem',
-    gap: '1.5rem',
-  },
-  menuIcon: {
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    padding: '0.3rem 0.5rem',
-    border: '1px solid transparent',
-  },
-  bottomLinks: {
-    display: 'flex',
-    gap: '1.2rem',
-  },
-  bottomLink: {
-    fontSize: '0.9rem',
-    cursor: 'pointer',
-    padding: '0.3rem 0',
-  }
-};
-
-const navHoverStyles = document.createElement('style');
-navHoverStyles.innerHTML = `
-  .nav-hover:hover, .logoBlock:hover, .deliverBlock:hover, .menuIcon:hover {
-    border-color: white !important;
-  }
-  .searchBtn:hover {
-    backgroundColor: '#f3a847' !important;
-  }
-`;
-document.head.appendChild(navHoverStyles);
 
 export default Navbar;

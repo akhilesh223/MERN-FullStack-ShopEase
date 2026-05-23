@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   /* Modern Dark/Vibrant Theme */
   --bg-primary: #0f172a;
