@@ -28,118 +28,51 @@ const Login = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div className="glass" style={styles.formCard}>
-        <h1 style={styles.title}>Sign In</h1>
-        {error && <div style={styles.error}>{error}</div>}
+    <div className="flex justify-center items-center min-h-[80vh] px-4 py-8">
+      <div className="glass w-full max-w-md p-8 md:p-10 rounded-2xl shadow-2xl border border-white/10">
+        <h1 className="text-3xl font-extrabold mb-8 text-center text-white">Sign In</h1>
+        {error && <div className="bg-red-500/10 text-red-300 p-4 rounded-lg mb-6 border-l-4 border-red-500">{error}</div>}
         
-        <form onSubmit={submitHandler} style={styles.form}>
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Email Address</label>
+        <form onSubmit={submitHandler} className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-slate-300">Email Address</label>
             <input 
               type="email" 
               placeholder="Enter email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)}
-              style={styles.input}
+              className="px-4 py-3 rounded-lg border border-slate-600 bg-slate-900/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               required
             />
           </div>
           
-          <div style={styles.formGroup}>
-            <label style={styles.label}>Password</label>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-slate-300">Password</label>
             <input 
               type="password" 
               placeholder="Enter password" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
+              className="px-4 py-3 rounded-lg border border-slate-600 bg-slate-900/50 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               required
             />
           </div>
 
-          <button type="submit" style={styles.btn} disabled={loading}>
+          <button 
+            type="submit" 
+            disabled={loading}
+            className={`py-3 mt-4 text-lg font-bold rounded-lg transition-all ${loading ? 'bg-blue-500/50 cursor-not-allowed text-white/70' : 'bg-blue-500 hover:bg-blue-600 hover:shadow-lg text-white hover:-translate-y-0.5'}`}
+          >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
-        <div style={styles.footer}>
-          New Customer? <Link to={redirect ? `/register?redirect=${redirect}` : '/register'} style={styles.link}>Register Here</Link>
+        <div className="mt-8 text-center text-slate-400">
+          New Customer? <Link to={redirect ? `/register?redirect=${redirect}` : '/register'} className="text-blue-400 font-bold hover:text-blue-300 transition-colors">Register Here</Link>
         </div>
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '80vh',
-    padding: '2rem',
-  },
-  formCard: {
-    width: '100%',
-    maxWidth: '450px',
-    padding: '2.5rem',
-    borderRadius: '16px',
-    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-  },
-  title: {
-    fontSize: '2rem',
-    marginBottom: '2rem',
-    textAlign: 'center',
-    color: 'var(--text-primary)',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.5rem',
-  },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.5rem',
-  },
-  label: {
-    fontSize: '0.9rem',
-    color: 'var(--text-secondary)',
-    fontWeight: '500',
-  },
-  input: {
-    padding: '0.8rem 1rem',
-    borderRadius: '8px',
-    border: '1px solid var(--border-color)',
-    backgroundColor: 'rgba(15, 23, 42, 0.5)',
-    color: 'white',
-    fontSize: '1rem',
-    outline: 'none',
-    transition: 'border-color 0.3s',
-  },
-  btn: {
-    padding: '1rem',
-    fontSize: '1.1rem',
-    borderRadius: '8px',
-    marginTop: '1rem',
-  },
-  footer: {
-    marginTop: '2rem',
-    textAlign: 'center',
-    color: 'var(--text-secondary)',
-  },
-  link: {
-    color: 'var(--accent-color)',
-    fontWeight: 'bold',
-  },
-  error: {
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    color: '#fca5a5',
-    padding: '1rem',
-    borderRadius: '8px',
-    marginBottom: '1.5rem',
-    borderLeft: '4px solid #ef4444',
-  }
 };
 
 export default Login;
