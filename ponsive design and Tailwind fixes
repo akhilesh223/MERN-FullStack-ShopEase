@@ -1,0 +1,17 @@
+[33mcommit 58569c1811c6b5373cd72d3b1e59e267f5a991a7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Akhilesh223 <akhileshnishad287@gmail.com>
+Date:   Sat May 23 14:42:35 2026 -0800
+
+    Added responsive design and Tailwind fixes
+
+[33mcommit 6ae24e5882de2a7f3f2e35f036d23d0b68b40571[m
+Author: Akhilesh223 <akhileshnishad287@gmail.com>
+Date:   Sat May 23 14:36:32 2026 -0800
+
+    Added responsive design and Tailwind fixes
+
+[33mcommit 1f75b010d7eaf2ba2f6bc563f0aec1540199a166[m
+Author: Akhilesh223 <akhileshnishad287@gmail.com>
+Date:   Mon Apr 27 16:30:15 2026 -0800
+
+    Initial commit - ShopEase project
